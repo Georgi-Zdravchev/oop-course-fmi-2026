@@ -12,7 +12,7 @@ namespace Songs {
         const int DURATION_STR_LENGTH = 5;
         const char DELIMITER = '|';
     }
-    
+
     struct Duration {
         int minutes;
         int seconds;
@@ -20,7 +20,7 @@ namespace Songs {
     };
 
     enum class Category {
-        POP, ROCK, HIPHOP, JAZZ, LATIN, OTHER
+        POP, ROCK, HIPHOP, JAZZ, LATIN, CHALGA, TECHNO, OTHER
     };
 
     using namespace Constants;
@@ -75,6 +75,12 @@ namespace Songs {
             if (strcmp(str, "Jazz") == 0) {
                 return JAZZ;
             }
+            if (strcmp(str, "Chalga") == 0) {
+                return CHALGA;
+            }
+            if (strcmp(str, "Techno") == 0) {
+                return TECHNO;
+            }
             if (strcmp(str, "Latin") == 0) {
                 return LATIN;
             }
@@ -89,6 +95,8 @@ namespace Songs {
                 case HIPHOP: return "HipHop";
                 case JAZZ: return "Jazz";
                 case LATIN: return "Latin";
+                case CHALGA: return "Chalga";
+                case TECHNO: return "Techno";
                 default: return "Other";
             }
         }
@@ -192,7 +200,7 @@ int main() {
     using namespace Songs;
     int n;
     cin >> n;
-    cin.ignore();
+    cin.ignore(); // ignore the newline after the number of songs, so that getline works correctly in readSong
 
     Song* playlist = new Song[n];
     for (int i = 0; i < n; i++) {
@@ -200,20 +208,29 @@ int main() {
     }
 
     // sort songs by criteria
+    cout << "Sort by duration:" << '\n';
     sortSongs(playlist, n, Utils::compareByDuration);
     writeAllSongs(playlist, n, cout);
+    cout << '\n';
 
     // Filter songs with duration more than 200 seconds
+    cout << "Filter by duration:" << '\n';
     filterSongsByCriteria(playlist, n, [](const Song& song) { return song.duration.totalSeconds > 200; });
+    cout << '\n';
 
     // print total duration of playlist in format HH:MM:SS
+    cout << "Total duration:" << '\n';
     getTotalDuration(playlist, n);
+    cout << '\n';
 
     // top 3 songs by duration
+    cout << "Top songs by duration:" << '\n';
     getTopSongsByDuration(playlist, n, 3);
+    cout << '\n';
 
     // filter by category
-    filterSongsByCriteria(playlist, n, [](const Song& song) { return song.category == Category::ROCK; });
+    cout << "Filter songs by category:" << '\n';
+    filterSongsByCriteria(playlist, n, [](const Song& song) { return song.category == Category::HIPHOP; });
 
-    delete[] playlist;
+    delete[] playlist; // !
 }
